@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text-to-Speech with Language Selection</title>
+</head>
+<body>
+  <h2>Speech Recognition Test</h2>
+
+  <label for="languageSelect">Select Language:</label>
+  <select id="languageSelect">
+    <option value="en-US">English (US)</option>
+    <option value="es-ES">Spanish (Spain)</option>
+    <option value="fr-FR">French</option>
+    <option value="de-DE">German</option>
+    <option value="hi-IN">Hindi</option>
+    <option value="ja-JP">Japanese</option>
+    <!-- Add more languages as needed -->
+  </select>
+
+  <br><br>
+
+  <button id="startBtn">Start Recognition</button>
+  <p id="result">Recognized Text will appear here.</p>
+
+  <script>
+    const startBtn = document.getElementById('startBtn');
+    const result = document.getElementById('result');
+    const languageSelect = document.getElementById('languageSelect');
+
+    // Check for browser support
+    if ('webkitSpeechRecognition' in window) {
+      const recognition = new webkitSpeechRecognition();
+
+      // Set recognition properties
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      // Start recognition on button click
+      startBtn.addEventListener('click', () => {
+        recognition.lang = languageSelect.value; // Set the language based on selection
+        recognition.start();
+      });
+
+      // Capture recognition result
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        result.textContent = `Recognized: ${transcript}`;
+      };
+
+      // Handle errors
+      recognition.onerror = (event) => {
+        result.textContent = `Error occurred: ${event.error}`;
+      };
+    } else {
+      result.textContent = 'Speech recognition not supported in this browser.';
+    }
+  </script>
+</body>
+</html>
